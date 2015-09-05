@@ -7,6 +7,8 @@ This is an Elixir implementation of a bit array using binaries.
 
 It is a fast space efficient data structure for lookups.
 
+> Note: Index is zero based in the implementation
+
 ### Examples
 ``` elixir
 iex> bitmap = Bitmap.new(5)
