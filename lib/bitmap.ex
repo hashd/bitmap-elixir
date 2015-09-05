@@ -11,36 +11,26 @@ defmodule Bitmap do
   @unset_bit 0
 
   @doc """
-  Creates and returns a bitmap of size `size`
+  Creates and returns a bitmap of size corresponding to the `argument` passed.
+
+  If `argument` is
+  - integer, size of bitmap is equal to the `argument`
+  - range, size of bitmap is equal to the length of `argument`
+  - list, size of bitmap is equal to the length of `argument`
 
   > Note: All bits are set to 0 by default
 
   ## Examples
       iex> Bitmap.new(400)
       <<0::size(400)>>
-  """
-  def new(size) when is_integer(size), do: <<0::size(size)>>
-
-  @doc """
-  Creates and returns a bitmap of size equal to the length of the `list`
-
-  > Note: All bits are set to 0 by default
-
-  ## Examples
       iex> Bitmap.new([1,2,3,4,5])
       <<0::size(5)>>
-  """
-  def new(list) when is_list(list), do: new(length(list))
-
-  @doc """
-  Creates and returns a bitmap of size equal to the length of the `range` passed
-
-  > Note: All bits are set to 0 by default
-
-  ## Examples
       iex> Bitmap.new(1..25)
       <<0::size(25)>>
   """
+  def new(argument)
+  def new(size) when is_integer(size), do: <<0::size(size)>>
+  def new(list) when is_list(list), do: new(length(list))
   def new(a..b), do: new(abs(b - a + 1))
 
   @doc """
