@@ -3,7 +3,7 @@ defmodule Bitmap.Mixfile do
 
   def project do
     [app: :bitmap,
-     version: "0.1.2",
+     version: "0.1.3",
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -39,7 +39,7 @@ defmodule Bitmap.Mixfile do
 
   defp description do
     """
-    Package to help you work with bitmaps (https://en.wikipedia.org/wiki/Bitmap)
+    Package to help you create and work with bitmaps (https://en.wikipedia.org/wiki/Bitmap)
     """
   end
 

@@ -90,17 +90,27 @@ defmodule Bitmap do
   """
   def toggle(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     {prefix, bit, rest} = split_at(bitmap, index)
-    case bit do
-      1 -> <<prefix::size(index), @unset_bit::size(1), rest::bitstring>>
-      0 -> <<prefix::size(index), @set_bit::size(1), rest::bitstring>>
+    case {bit, prefix} do
+      {1, <<>>} -> <<@unset_bit::size(1), rest::bitstring>>
+      {0, <<>>} -> <<@set_bit::size(1), rest::bitstring>>
+      {1, _}    -> <<prefix::size(index), @unset_bit::size(1), rest::bitstring>>
+      {0, _}    -> <<prefix::size(index), @set_bit::size(1), rest::bitstring>>
     end
   end
 
+  defp set_bit(bitmap, 0, bit) do
+    {_prefix, _bit, rest} = split_at(bitmap, 0)
+    <<bit::size(1), rest::bitstring>>
+  end
   defp set_bit(bitmap, index, bit) do
     {prefix, _bit, rest} = split_at(bitmap, index)
     <<prefix::size(index), bit::size(1), rest::bitstring>>
   end
 
+  defp split_at(bitmap, 0) do
+    <<bit::size(1), rest::bitstring>> = bitmap
+    {<<>>, bit, rest}
+  end
   defp split_at(bitmap, index) do
     <<prefix::size(index), bit::size(1), rest::bitstring>> = bitmap
     {prefix, bit, rest}
