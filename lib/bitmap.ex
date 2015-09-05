@@ -61,6 +61,21 @@ defmodule Bitmap do
   def set(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     set_bit(bitmap, index, @set_bit)
   end
+  def set(bitmap, :all), do: set_all(bitmap)
+
+  @doc """
+  Set all bits in the bitmap and returns a new bitmap
+
+  ## Examples
+      iex> Bitmap.set_all(Bitmap.new(10))
+      <<255, 3::size(2)>>
+      iex> Bitmap.set_all(Bitmap.new(100))
+      <<255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 15::size(4)>>
+  """
+  def set_all(bitmap) do
+    size = bit_size(bitmap)
+    fill_binary(<<>>, size, 1)
+  end
 
   @doc """
   Unsets the bit at `index` in the bitmap and returns the new bitmap
@@ -74,6 +89,20 @@ defmodule Bitmap do
   """
   def unset(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     set_bit(bitmap, index, @unset_bit)
+  end
+  def unset(bitmap, :all), do: unset_all(bitmap)
+
+  @doc """
+  Unsets all bits in the bitmap and returns a new bitmap
+
+  ## Examples
+      iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
+      iex> Bitmap.unset_all(bm)
+      <<0, 0::size(2)>>
+  """
+  def unset_all(bitmap) do
+    size = bit_size(bitmap)
+    fill_binary(<<>>, size, 0)
   end
 
   @doc """
@@ -114,5 +143,10 @@ defmodule Bitmap do
   defp split_at(bitmap, index) do
     <<prefix::size(index), bit::size(1), rest::bitstring>> = bitmap
     {prefix, bit, rest}
+  end
+
+  defp fill_binary(binary, 0, _bit), do: binary
+  defp fill_binary(binary, n, bit) do
+    fill_binary(<<bit::size(1), binary::bitstring>>, n-1, bit)
   end
 end
