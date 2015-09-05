@@ -19,7 +19,7 @@ iex> bitmap |> Bitmap.set(2) |> Bitmap.set(3) |> Bitmap.unset(2)
 <<2::size(5)>> # 00010
 ```
 
-Read the documentation here for description and more examples.
+Read the latest documentation [here](http://hexdocs.pm/bitmap/overview.html) for elaborate description and more examples on how to use the library.
 
 ##### License
 This project is available under MIT License.
