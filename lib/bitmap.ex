@@ -50,6 +50,24 @@ defmodule Bitmap do
   end
 
   @doc """
+  Returns a boolean representing whether the bit at position `index`
+  is set or not
+
+  ## Examples
+      iex> bm = Bitmap.new(5) |> Bitmap.set(1) |> Bitmap.set(3)
+      iex> Bitmap.set?(bm, 1)
+      true
+      iex> Bitmap.set?(bm, 4)
+      false
+  """
+  def set?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
+    case at(bitmap, index) do
+      @set_bit   -> true
+      @unset_bit -> false
+    end
+  end
+
+  @doc """
   Sets the bit at `index` in the bitmap and returns the new bitmap
 
   Index can also have a value `:all` in which case all bits
@@ -113,8 +131,10 @@ defmodule Bitmap do
 
   @doc """
   Toggles the bit at `index` in the bitmap and returns the new bitmap.
-
   i.e. it sets the bit to 1 if it was 0 or sets the bit to 0 if it was 1
+
+  Index can also have a value `:all` in which case all bits will be toggled
+  like in toggle_all
 
   ## Examples
       iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
@@ -125,27 +145,34 @@ defmodule Bitmap do
   """
   def toggle(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     {prefix, bit, rest} = split_at(bitmap, index)
-    case {bit, prefix} do
-      {1, <<>>} -> <<@unset_bit::size(1), rest::bitstring>>
-      {0, <<>>} -> <<@set_bit::size(1), rest::bitstring>>
-      {1, _}    -> <<prefix::size(index), @unset_bit::size(1), rest::bitstring>>
-      {0, _}    -> <<prefix::size(index), @set_bit::size(1), rest::bitstring>>
+    case bit do
+      1 -> <<prefix::size(index), @unset_bit::size(1), rest::bitstring>>
+      0 -> <<prefix::size(index), @set_bit::size(1), rest::bitstring>>
+    end
+  end
+  def toggle(bitmap, :all), do: toggle_all(bitmap)
+
+  @doc """
+  Toggles all bits in the bitmap and returns a new bitmap
+
+  ## Examples
+      iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
+      iex> Bitmap.toggle_all(bm)
+      <<247, 1::size(2)>>
+  """
+  def toggle_all(bitmap) do
+    size = bit_size(bitmap)
+    toggle_binary(bitmap, size, <<>>)
+  end
+
+  defp set_bit(bitmap, index, bit) do
+    {prefix, o_bit, rest} = split_at(bitmap, index)
+    cond do
+      o_bit == bit -> bitmap
+      true -> <<prefix::size(index), bit::size(1), rest::bitstring>>
     end
   end
 
-  defp set_bit(bitmap, 0, bit) do
-    {_prefix, _bit, rest} = split_at(bitmap, 0)
-    <<bit::size(1), rest::bitstring>>
-  end
-  defp set_bit(bitmap, index, bit) do
-    {prefix, _bit, rest} = split_at(bitmap, index)
-    <<prefix::size(index), bit::size(1), rest::bitstring>>
-  end
-
-  defp split_at(bitmap, 0) do
-    <<bit::size(1), rest::bitstring>> = bitmap
-    {<<>>, bit, rest}
-  end
   defp split_at(bitmap, index) do
     <<prefix::size(index), bit::size(1), rest::bitstring>> = bitmap
     {prefix, bit, rest}
@@ -154,5 +181,20 @@ defmodule Bitmap do
   defp fill_binary(binary, 0, _bit), do: binary
   defp fill_binary(binary, n, bit) do
     fill_binary(<<bit::size(1), binary::bitstring>>, n-1, bit)
+  end
+
+  defp toggle_binary(_bitmap, 0, acc), do: reverse_binary(acc)
+  defp toggle_binary(<<bit::size(1), rest::bitstring>>, size, acc) do
+    case bit do
+      1 -> toggle_binary(rest, size-1, <<@unset_bit::size(1), acc::bitstring>>)
+      0 -> toggle_binary(rest, size-1, <<@set_bit::size(1), acc::bitstring>>)
+    end
+  end
+
+  defp reverse_binary(binary), do: reverse_binary(binary, bit_size(binary), <<>>)
+
+  defp reverse_binary(_binary, 0, acc), do: acc
+  defp reverse_binary(<<bit::size(1), rest::bitstring>>, size, acc) do
+    reverse_binary(rest, size-1, <<bit::size(1), acc::bitstring>>)
   end
 end
