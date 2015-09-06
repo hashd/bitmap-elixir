@@ -52,6 +52,9 @@ defmodule Bitmap do
   @doc """
   Sets the bit at `index` in the bitmap and returns the new bitmap
 
+  Index can also have a value `:all` in which case all bits
+  will be set like in set_all
+
   ## Examples
       iex> Bitmap.set(Bitmap.new(5), 3)
       <<2::size(5)>>
@@ -78,7 +81,10 @@ defmodule Bitmap do
   end
 
   @doc """
-  Unsets the bit at `index` in the bitmap and returns the new bitmap
+  Unsets the bit at `index` in the bitmap and returns the new bitmap. 
+
+  Index can also have a value `:all` in which case all bits
+  will be unset like in unset_all
 
   ## Examples
       iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
