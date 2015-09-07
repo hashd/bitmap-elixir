@@ -45,8 +45,7 @@ defmodule Bitmap do
       1
   """
   def at(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
-    {_prefix, bit, _rest} = split_at(bitmap, index)
-    bit
+    bitmap |> split_at(index) |> elem(1)
   end
 
   @doc """
@@ -61,10 +60,7 @@ defmodule Bitmap do
       false
   """
   def set?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
-    case at(bitmap, index) do
-      @set_bit   -> true
-      @unset_bit -> false
-    end
+    at(bitmap, index) == @set_bit
   end
 
   @doc """
