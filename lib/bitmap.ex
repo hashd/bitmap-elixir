@@ -95,6 +95,21 @@ defmodule Bitmap do
   end
 
   @doc """
+  Returns a boolean representing whether the bit at position `index`
+  is unset or not
+
+  ## Examples
+      iex> bm = Bitmap.new(5) |> Bitmap.set(1) |> Bitmap.set(3)
+      iex> Bitmap.unset?(bm, 1)
+      false
+      iex> Bitmap.unset?(bm, 4)
+      true
+  """
+  def unset?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
+    at(bitmap, index) == @unset_bit
+  end
+
+  @doc """
   Unsets the bit at `index` in the bitmap and returns the new bitmap. 
 
   Index can also have a value `:all` in which case all bits
