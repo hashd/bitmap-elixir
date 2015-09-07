@@ -6,7 +6,7 @@ defmodule Bitmap do
   This behavior has been designed to be pipe-friendly, so pipe 'em up.
 
   Methods are delegated to the default implementation which is
-  current binaries.
+  currently, binaries - Bitmap.Binary.
   """
   use Behaviour
 
