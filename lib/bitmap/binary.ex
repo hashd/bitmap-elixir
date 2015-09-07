@@ -7,6 +7,7 @@ defmodule Bitmap.Binary do
 
   The module has been designed to be pipe-friendly, so pipe 'em up
   """
+  import Kernel, except: [to_string: 1]
   @behaviour Bitmap
 
   @set_bit   1
@@ -172,8 +173,33 @@ defmodule Bitmap.Binary do
       <<247, 1::size(2)>>
   """
   def toggle_all(bitmap) do
-    size = bit_size(bitmap)
-    toggle_binary(bitmap, size, <<>>)
+    toggle_binary(bitmap, bit_size(bitmap), <<>>)
+  end
+
+  @doc """
+  Returns the string representation of the bitmap.
+
+  Note: This can be very long for huge bitmaps.
+  """
+  def to_string(bitmap) do
+    to_string(bitmap, <<>>)
+  end
+
+  @doc """
+  Inspects the bitmap and returns the string representation of the bitmap.
+
+  Note: This can be very long for huge bitmaps.
+  """
+  def inspect(bitmap) do
+    bitmap |> to_string |> IO.inspect
+  end
+
+  defp to_string(<<>>, acc), do: String.reverse(acc)
+  defp to_string(<<bit::size(1), rest::bitstring>>, acc) do
+    case bit do
+      1 -> to_string(rest, "#{@set_bit}" <> acc)
+      0 -> to_string(rest, "#{@unset_bit}" <> acc)
+    end
   end
 
   defp set_bit(bitmap, index, bit) do
