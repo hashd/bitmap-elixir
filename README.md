@@ -24,10 +24,10 @@ iex> bitmap |> Bitmap.set(2) |> Bitmap.set(3) |> Bitmap.unset(2)
 Read the latest documentation [here](http://hexdocs.pm/bitmap/overview.html) for elaborate description and more examples on how to use the library.
 
 ### TODO
-[] Provide method to print the bitmap in its entire form
-[] Provide alternate implementation using Integers since Erlang supports arbitrary sized integers
-[] Benchmark implementations on a huge use case and compare numbers
-[] Set the best implementation as default
+- [ ] Provide method to print the bitmap in its entire form
+- [ ] Provide alternate implementation using Integers since Erlang supports arbitrary sized integers
+- [ ] Benchmark implementations on a huge use case and compare numbers
+- [ ] Set the best implementation as default
 
 ##### License
 This project is available under MIT License.
