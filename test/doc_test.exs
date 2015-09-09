@@ -3,4 +3,5 @@ defmodule DocTest do
 
   doctest Bitmap.Binary
   doctest Bitmap.Integer
+  doctest Bitmap.Utils
 end

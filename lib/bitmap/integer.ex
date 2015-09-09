@@ -2,15 +2,19 @@ defmodule Bitmap.Integer do
   @moduledoc """
   Bitmap behaviour implementation using arbitrarily sized integers.
   """
-  import Kernel, except: [to_string: 1]
   use Bitwise
+
+  import Kernel, except: [to_string: 1]
 
   @behaviour Bitmap
 
   @typedoc """
   A typed map which holds the integer bitmap as defined by the module struct
   """
-  @type t :: %__MODULE__{}
+  @type t     :: %__MODULE__{}
+  @type argt  :: non_neg_integer | [any] | Range.t
+  @type index :: non_neg_integer
+  @type bit   :: 1 | 0
 
   @set_bit    1
   @unset_bit  0
@@ -35,6 +39,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.new(1..25)
       %Bitmap.Integer{data: 0, size: 25}
   """
+  @spec new(argt) :: __MODULE__.t
   def new(argument)
   def new(size) when is_integer(size) and size >= 0, do: %__MODULE__{size: size}
   def new(list) when is_list(list), do: new(length(list))
@@ -51,6 +56,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.at(bm, 2)
       1
   """
+  @spec at(__MODULE__.t, index) :: bit
   def at(bitmap, index) do 
     (bitmap.data >>> index) &&& 1
   end
@@ -66,6 +72,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.set?(bm, 4)
       false
   """
+  @spec set?(__MODULE__.t, index) :: boolean
   def set?(bitmap, index) do
     at(bitmap, index) == @set_bit
   end
@@ -82,6 +89,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.set(Bitmap.Integer.new(1..10), 2)
       %Bitmap.Integer{data: 4, size: 10}
   """
+  @spec set(__MODULE__.t, index) :: __MODULE__.t
   def set(%__MODULE__{size: size} = bitmap, index) when index >= 0 and index < size do
     %__MODULE__{bitmap | data: (bitmap.data ||| (@set_bit <<< index))}
   end
@@ -96,8 +104,10 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.set_all(Bitmap.Integer.new(100))
       %Bitmap.Integer{data: 1267650600228229401496703205375, size: 100}
   """
+  @spec set_all(__MODULE__.t) :: __MODULE__.t
   def set_all(bitmap) do
-    %__MODULE__{bitmap | data: (:math.pow(2, bitmap.size) |> trunc) - 1}
+    import Bitmap.Utils, only: [pow: 2]
+    %__MODULE__{bitmap | data: pow(2, bitmap.size) - 1}
   end
 
   @doc """
@@ -111,6 +121,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.unset?(bm, 4)
       true
   """
+  @spec unset?(__MODULE__.t, index) :: boolean
   def unset?(bitmap, index) do
     at(bitmap, index) == @unset_bit
   end
@@ -128,6 +139,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.unset(bm, 8)
       %Bitmap.Integer{data: 16, size: 10}
   """
+  @spec unset(__MODULE__.t, index) :: __MODULE__.t
   def unset(%__MODULE__{size: size} = bitmap, index) when index >=0 and index < size do
     %__MODULE__{bitmap | data: (bitmap.data &&& ~~~(@set_bit <<< index))}
   end
@@ -141,6 +153,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.unset_all(bm)
       %Bitmap.Integer{data: 0, size: 10}
   """
+  @spec unset_all(__MODULE__.t) :: __MODULE__.t
   def unset_all(bitmap) do
     %__MODULE__{bitmap | data: 0}
   end
@@ -159,6 +172,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.toggle(bm, 6)
       %Bitmap.Integer{data: 336, size: 10}
   """
+  @spec toggle(__MODULE__.t, index) :: __MODULE__.t
   def toggle(bitmap, index) do
     %__MODULE__{bitmap | data: (bitmap.data ^^^ (@set_bit <<< index))}
   end
@@ -171,6 +185,7 @@ defmodule Bitmap.Integer do
       iex> Bitmap.Integer.toggle_all(bm)
       %Bitmap.Integer{data: -273, size: 10}
   """
+  @spec toggle_all(__MODULE__.t) :: __MODULE__.t
   def toggle_all(bitmap) do
     %__MODULE__{bitmap | data: ~~~bitmap.data}
   end
@@ -180,6 +195,7 @@ defmodule Bitmap.Integer do
 
   Note: This can be very long for huge bitmaps.
   """
+  @spec to_string(__MODULE__.t) :: String.t
   def to_string(bitmap) do
     to_string(bitmap.data, bitmap.size, <<>>)
   end
@@ -189,6 +205,7 @@ defmodule Bitmap.Integer do
 
   Note: This can be very long for huge bitmaps.
   """
+  @spec inspect(__MODULE__.t) :: __MODULE__.t
   def inspect(bitmap) do
     bitmap |> to_string |> IO.inspect
   end

@@ -8,7 +8,13 @@ defmodule Bitmap.Binary do
   The module has been designed to be pipe-friendly, so pipe 'em up
   """
   import Kernel, except: [to_string: 1]
+
   @behaviour Bitmap
+
+  @type t     :: binary
+  @type argt  :: non_neg_integer | [any] | Range.t
+  @type index :: non_neg_integer
+  @type bit   :: 1 | 0
 
   @set_bit   1
   @unset_bit 0
@@ -31,6 +37,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.new(1..25)
       <<0::size(25)>>
   """
+  @spec new(argt) :: __MODULE__.t
   def new(argument)
   def new(size) when is_integer(size), do: <<0::size(size)>>
   def new(list) when is_list(list), do: new(length(list))
@@ -47,6 +54,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.at(bm, 2)
       1
   """
+  @spec at(__MODULE__.t, index) :: bit
   def at(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     bitmap |> split_at(index) |> elem(1)
   end
@@ -62,6 +70,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.set?(bm, 4)
       false
   """
+  @spec set?(__MODULE__.t, index) :: boolean
   def set?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     at(bitmap, index) == @set_bit
   end
@@ -78,6 +87,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.set(Bitmap.Binary.new(1..10), 2)
       <<32, 0::size(2)>>
   """
+  @spec set(__MODULE__.t, index) :: __MODULE__.t
   def set(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     set_bit(bitmap, index, @set_bit)
   end
@@ -92,6 +102,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.set_all(Bitmap.Binary.new(100))
       <<255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 15::size(4)>>
   """
+  @spec set_all(__MODULE__.t) :: __MODULE__.t
   def set_all(bitmap) do
     fill_binary(<<>>, bit_size(bitmap), @set_bit)
   end
@@ -107,6 +118,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.unset?(bm, 4)
       true
   """
+  @spec unset?(__MODULE__.t, index) :: boolean
   def unset?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     at(bitmap, index) == @unset_bit
   end
@@ -124,6 +136,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.unset(bm, 8)
       <<8, 0::size(2)>>
   """
+  @spec unset(__MODULE__.t, index) :: __MODULE__.t
   def unset(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     set_bit(bitmap, index, @unset_bit)
   end
@@ -137,6 +150,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.unset_all(bm)
       <<0, 0::size(2)>>
   """
+  @spec unset_all(__MODULE__.t) :: __MODULE__.t
   def unset_all(bitmap) do
     fill_binary(<<>>, bit_size(bitmap), @unset_bit)
   end
@@ -155,6 +169,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.toggle(bm, 6)
       <<10, 2::size(2)>>
   """
+  @spec toggle(__MODULE__.t, index) :: __MODULE__.t
   def toggle(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
     {prefix, bit, rest} = split_at(bitmap, index)
     case bit do
@@ -172,6 +187,7 @@ defmodule Bitmap.Binary do
       iex> Bitmap.Binary.toggle_all(bm)
       <<247, 1::size(2)>>
   """
+  @spec toggle_all(__MODULE__.t) :: __MODULE__.t
   def toggle_all(bitmap) do
     toggle_binary(bitmap, bit_size(bitmap), <<>>)
   end
@@ -181,6 +197,7 @@ defmodule Bitmap.Binary do
 
   Note: This can be very long for huge bitmaps.
   """
+  @spec to_string(__MODULE__.t) :: String.t
   def to_string(bitmap) do
     to_string(bitmap, <<>>)
   end
@@ -190,6 +207,7 @@ defmodule Bitmap.Binary do
 
   Note: This can be very long for huge bitmaps.
   """
+  @spec inspect(__MODULE__.t) :: String.t
   def inspect(bitmap) do
     bitmap |> to_string |> IO.inspect
   end

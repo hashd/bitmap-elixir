@@ -1,7 +1,7 @@
 defmodule BitmapBench do
   use Benchfella
 
-  @size 1000
+  @size 1000000
   @list Enum.to_list(0..(@size-1))
   @bb   Bitmap.Binary.new(@size)
   @bi   Bitmap.Integer.new(@size)
@@ -17,29 +17,27 @@ defmodule BitmapBench do
   end
 
   bench "Benchmark Bitmap.Binary.set" do
-    @list |> Enum.reduce(@bb, fn ele, acc -> Bitmap.Binary.set(acc, ele) end)
+    Bitmap.Binary.set(@bb, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Integer.set" do
-    @list |> Enum.reduce(@bi, fn ele, acc -> Bitmap.Integer.set(acc, ele) end)
+    Bitmap.Integer.set(@bi, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Binary.toggle" do
-    @list |> Enum.reduce(@bb, fn ele, acc -> Bitmap.Binary.toggle(acc, ele) end)
-    @list |> Enum.reduce(@sbb, fn ele, acc -> Bitmap.Binary.toggle(acc, ele) end)
+    Bitmap.Binary.toggle(@bb, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Integer.toggle" do
-    @list |> Enum.reduce(@bi, fn ele, acc -> Bitmap.Integer.toggle(acc, ele) end)
-    @list |> Enum.reduce(@sbi, fn ele, acc -> Bitmap.Integer.toggle(acc, ele) end)
+    Bitmap.Integer.toggle(@bi, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Binary.unset" do
-    @list |> Enum.reduce(@sbb, fn ele, acc -> Bitmap.Binary.unset(acc, ele) end)
+    Bitmap.Binary.unset(@sbb, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Integer.unset" do
-    @list |> Enum.reduce(@sbi, fn ele, acc -> Bitmap.Integer.unset(acc, ele) end)
+    Bitmap.Integer.unset(@bi, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Binary.set_all" do
@@ -69,19 +67,19 @@ defmodule BitmapBench do
   end
 
   bench "Benchmark Bitmap.Binary.at" do
-    @list |> Enum.each(fn idx -> Bitmap.Binary.at(@bb, idx) end)
+    Bitmap.Binary.at(@bb, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Integer.at" do
-    @list |> Enum.each(fn idx -> Bitmap.Integer.at(@bi, idx) end)
+    Bitmap.Integer.at(@bi, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Binary.set?" do
-    @list |> Enum.each(fn idx -> Bitmap.Binary.set?(@sbb, idx) end)
+    Bitmap.Binary.set?(@bb, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Integer.set?" do
-    @list |> Enum.each(fn idx -> Bitmap.Integer.set?(@sbi, idx) end)
+    Bitmap.Integer.set?(@bi, div(@size, 2))
   end
 
   bench "Benchmark Bitmap.Binary.to_string" do
