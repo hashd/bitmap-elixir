@@ -24,11 +24,11 @@ defmodule Bitmap.Binary do
   > Note: All bits are set to 0 by default
 
   ## Examples
-      iex> Bitmap.new(400)
+      iex> Bitmap.Binary.new(400)
       <<0::size(400)>>
-      iex> Bitmap.new([1,2,3,4,5])
+      iex> Bitmap.Binary.new([1,2,3,4,5])
       <<0::size(5)>>
-      iex> Bitmap.new(1..25)
+      iex> Bitmap.Binary.new(1..25)
       <<0::size(25)>>
   """
   def new(argument)
@@ -40,11 +40,11 @@ defmodule Bitmap.Binary do
   Returns the bit value at `index` in the bitmap
 
   ## Examples
-      iex> bm = Bitmap.new(5)
-      iex> Bitmap.at(bm, 2)
+      iex> bm = Bitmap.Binary.new(5)
+      iex> Bitmap.Binary.at(bm, 2)
       0
-      iex> bm = Bitmap.set(bm, 2)
-      iex> Bitmap.at(bm, 2)
+      iex> bm = Bitmap.Binary.set(bm, 2)
+      iex> Bitmap.Binary.at(bm, 2)
       1
   """
   def at(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
@@ -56,10 +56,10 @@ defmodule Bitmap.Binary do
   is set or not
 
   ## Examples
-      iex> bm = Bitmap.new(5) |> Bitmap.set(1) |> Bitmap.set(3)
-      iex> Bitmap.set?(bm, 1)
+      iex> bm = Bitmap.Binary.new(5) |> Bitmap.Binary.set(1) |> Bitmap.Binary.set(3)
+      iex> Bitmap.Binary.set?(bm, 1)
       true
-      iex> Bitmap.set?(bm, 4)
+      iex> Bitmap.Binary.set?(bm, 4)
       false
   """
   def set?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
@@ -73,9 +73,9 @@ defmodule Bitmap.Binary do
   will be set like in set_all
 
   ## Examples
-      iex> Bitmap.set(Bitmap.new(5), 3)
+      iex> Bitmap.Binary.set(Bitmap.Binary.new(5), 3)
       <<2::size(5)>>
-      iex> Bitmap.set(Bitmap.new(1..10), 2)
+      iex> Bitmap.Binary.set(Bitmap.Binary.new(1..10), 2)
       <<32, 0::size(2)>>
   """
   def set(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
@@ -87,9 +87,9 @@ defmodule Bitmap.Binary do
   Set all bits in the bitmap and returns a new bitmap
 
   ## Examples
-      iex> Bitmap.set_all(Bitmap.new(10))
+      iex> Bitmap.Binary.set_all(Bitmap.Binary.new(10))
       <<255, 3::size(2)>>
-      iex> Bitmap.set_all(Bitmap.new(100))
+      iex> Bitmap.Binary.set_all(Bitmap.Binary.new(100))
       <<255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 15::size(4)>>
   """
   def set_all(bitmap) do
@@ -101,10 +101,10 @@ defmodule Bitmap.Binary do
   is unset or not
 
   ## Examples
-      iex> bm = Bitmap.new(5) |> Bitmap.set(1) |> Bitmap.set(3)
-      iex> Bitmap.unset?(bm, 1)
+      iex> bm = Bitmap.Binary.new(5) |> Bitmap.Binary.set(1) |> Bitmap.Binary.set(3)
+      iex> Bitmap.Binary.unset?(bm, 1)
       false
-      iex> Bitmap.unset?(bm, 4)
+      iex> Bitmap.Binary.unset?(bm, 4)
       true
   """
   def unset?(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
@@ -112,16 +112,16 @@ defmodule Bitmap.Binary do
   end
 
   @doc """
-  Unsets the bit at `index` in the bitmap and returns the new bitmap. 
+  Unsets the bit at `index` in the bitmap and returns the new bitmap
 
   Index can also have a value `:all` in which case all bits
   will be unset like in unset_all
 
   ## Examples
-      iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
-      iex> Bitmap.unset(bm, 4)
+      iex> bm = Bitmap.Binary.new(10) |> Bitmap.Binary.set(4) |> Bitmap.Binary.set(8)
+      iex> Bitmap.Binary.unset(bm, 4)
       <<0, 2::size(2)>>
-      iex> Bitmap.unset(bm, 8)
+      iex> Bitmap.Binary.unset(bm, 8)
       <<8, 0::size(2)>>
   """
   def unset(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
@@ -133,8 +133,8 @@ defmodule Bitmap.Binary do
   Unsets all bits in the bitmap and returns a new bitmap
 
   ## Examples
-      iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
-      iex> Bitmap.unset_all(bm)
+      iex> bm = Bitmap.Binary.new(10) |> Bitmap.Binary.set(4) |> Bitmap.Binary.set(8)
+      iex> Bitmap.Binary.unset_all(bm)
       <<0, 0::size(2)>>
   """
   def unset_all(bitmap) do
@@ -142,17 +142,17 @@ defmodule Bitmap.Binary do
   end
 
   @doc """
-  Toggles the bit at `index` in the bitmap and returns the new bitmap.
+  Toggles the bit at `index` in the bitmap and returns the new bitmap
   i.e. it sets the bit to 1 if it was 0 or sets the bit to 0 if it was 1
 
   Index can also have a value `:all` in which case all bits will be toggled
   like in toggle_all
 
   ## Examples
-      iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
-      iex> Bitmap.toggle(bm, 3)
+      iex> bm = Bitmap.Binary.new(10) |> Bitmap.Binary.set(4) |> Bitmap.Binary.set(8)
+      iex> Bitmap.Binary.toggle(bm, 3)
       <<24, 2::size(2)>>
-      iex> Bitmap.toggle(bm, 6)
+      iex> Bitmap.Binary.toggle(bm, 6)
       <<10, 2::size(2)>>
   """
   def toggle(bitmap, index) when index >= 0 and index < bit_size(bitmap) do
@@ -168,8 +168,8 @@ defmodule Bitmap.Binary do
   Toggles all bits in the bitmap and returns a new bitmap
 
   ## Examples
-      iex> bm = Bitmap.new(10) |> Bitmap.set(4) |> Bitmap.set(8)
-      iex> Bitmap.toggle_all(bm)
+      iex> bm = Bitmap.Binary.new(10) |> Bitmap.Binary.set(4) |> Bitmap.Binary.set(8)
+      iex> Bitmap.Binary.toggle_all(bm)
       <<247, 1::size(2)>>
   """
   def toggle_all(bitmap) do
@@ -177,7 +177,7 @@ defmodule Bitmap.Binary do
   end
 
   @doc """
-  Returns the string representation of the bitmap.
+  Returns the string representation of the bitmap
 
   Note: This can be very long for huge bitmaps.
   """
@@ -186,7 +186,7 @@ defmodule Bitmap.Binary do
   end
 
   @doc """
-  Inspects the bitmap and returns the string representation of the bitmap.
+  Inspects the bitmap and returns the string representation of the bitmap
 
   Note: This can be very long for huge bitmaps.
   """

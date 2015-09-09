@@ -1,8 +1,6 @@
 defmodule BitmapTest do
   use ExUnit.Case
 
-  doctest Bitmap.Binary
-
   test "create bitmaps with size" do
     assert Bitmap.new(0) == <<>>
     assert Bitmap.new(25) == <<0, 0, 0, 0::size(1)>>
