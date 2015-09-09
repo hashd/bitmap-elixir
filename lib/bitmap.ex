@@ -10,7 +10,7 @@ defmodule Bitmap do
   """
   use Behaviour
 
-  @type bitmap :: binary
+  @type bitmap :: binary | Bitmap.Integer.t
   @type index  :: non_neg_integer
   @type bit    :: 1 | 0
   @type argt   :: non_neg_integer | list | Range.t 
@@ -31,5 +31,5 @@ defmodule Bitmap do
   defdelegate [new(argument), at(bitmap, index), set?(bitmap, index), 
     set(bitmap, index), set_all(bitmap), unset?(bitmap, index), 
     unset(bitmap, index), unset_all(bitmap), toggle(bitmap, index),
-    toggle_all(bitmap), to_string(bitmap), inspect(bitmap)], to: Bitmap.Binary 
+    toggle_all(bitmap), to_string(bitmap), inspect(bitmap)], to: Bitmap.Binary
 end
