@@ -33,7 +33,8 @@ defmodule Bitmap.Mixfile do
   defp deps do
     [
       {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.6", only: :dev}
+      {:ex_doc, "~> 0.6", only: :dev},
+      {:benchfella, "~> 0.2", only: :dev}
     ]
   end
 

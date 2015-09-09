@@ -6,7 +6,7 @@ defmodule Bitmap do
   This behavior has been designed to be pipe-friendly, so pipe 'em up.
 
   Methods are delegated to the default implementation which is
-  currently, binaries - Bitmap.Binary.
+  currently, integer - Bitmap.Integer.
   """
   use Behaviour
 
@@ -31,5 +31,5 @@ defmodule Bitmap do
   defdelegate [new(argument), at(bitmap, index), set?(bitmap, index), 
     set(bitmap, index), set_all(bitmap), unset?(bitmap, index), 
     unset(bitmap, index), unset_all(bitmap), toggle(bitmap, index),
-    toggle_all(bitmap), to_string(bitmap), inspect(bitmap)], to: Bitmap.Binary
+    toggle_all(bitmap), to_string(bitmap), inspect(bitmap)], to: Bitmap.Integer
 end
