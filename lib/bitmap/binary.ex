@@ -104,7 +104,10 @@ defmodule Bitmap.Binary do
   """
   @spec set_all(__MODULE__.t) :: __MODULE__.t
   def set_all(bitmap) do
-    fill_binary(<<>>, bit_size(bitmap), @set_bit)
+    import Bitmap.Utils, only: [pow: 2]
+
+    bitmap_size = bit_size(bitmap)
+    <<pow(2, bitmap_size)-1::size(bitmap_size)>>
   end
 
   @doc """
@@ -152,7 +155,8 @@ defmodule Bitmap.Binary do
   """
   @spec unset_all(__MODULE__.t) :: __MODULE__.t
   def unset_all(bitmap) do
-    fill_binary(<<>>, bit_size(bitmap), @unset_bit)
+    bitmap_size = bit_size(bitmap)
+    <<0::size(bitmap_size)>>
   end
 
   @doc """
@@ -231,11 +235,6 @@ defmodule Bitmap.Binary do
   defp split_at(bitmap, index) do
     <<prefix::size(index), bit::size(1), rest::bitstring>> = bitmap
     {prefix, bit, rest}
-  end
-
-  defp fill_binary(binary, 0, _bit), do: binary
-  defp fill_binary(binary, n, bit) do
-    fill_binary(<<bit::size(1), binary::bitstring>>, n-1, bit)
   end
 
   defp toggle_binary(_bitmap, 0, acc), do: reverse_binary(acc)
