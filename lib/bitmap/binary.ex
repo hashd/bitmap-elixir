@@ -41,7 +41,7 @@ defmodule Bitmap.Binary do
   def new(argument)
   def new(size) when is_integer(size), do: <<0::size(size)>>
   def new(list) when is_list(list), do: new(length(list))
-  def new(a..b), do: new(abs(b - a + 1))
+  def new(a..b), do: new(abs(b - a) + 1)
 
   @doc """
   Returns the bit value at `index` in the bitmap

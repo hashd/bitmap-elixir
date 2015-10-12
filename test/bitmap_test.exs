@@ -12,6 +12,9 @@ defmodule BitmapTest do
     assert Bitmap.Binary.new(0..0) == <<0::size(1)>>
     assert Bitmap.Binary.new(0..10) == <<0, 0::size(3)>>
     assert Bitmap.Binary.new(512..591) == <<0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>
+    assert Bitmap.Binary.new(-1..1) == <<0::size(3)>>
+    assert Bitmap.Binary.new(-3..-1) == <<0::size(3)>>
+    assert Bitmap.Binary.new(-1..-3) == <<0::size(3)>>
   end
 
   test "create bitmaps with list" do
