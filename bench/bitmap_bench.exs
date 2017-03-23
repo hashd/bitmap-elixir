@@ -2,7 +2,6 @@ defmodule BitmapBench do
   use Benchfella
 
   @size 1000000
-  @list Enum.to_list(0..(@size-1))
   @bb   Bitmap.Binary.new(@size)
   @bi   Bitmap.Integer.new(@size)
   @sbb  Bitmap.Binary.new(@size) |> Bitmap.Binary.set_all
