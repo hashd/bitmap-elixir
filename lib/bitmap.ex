@@ -8,28 +8,34 @@ defmodule Bitmap do
   Methods are delegated to the default implementation which is
   currently, integer - Bitmap.Integer.
   """
-  use Behaviour
-
   @type bitmap :: binary | Bitmap.Integer.t
   @type index  :: non_neg_integer
   @type bit    :: 1 | 0
-  @type argt   :: non_neg_integer | list | Range.t 
+  @type argt   :: non_neg_integer | list | Range.t
 
-  defcallback new(argt)             :: any
-  defcallback at(bitmap, index)     :: bit
-  defcallback set?(bitmap, index)   :: boolean
-  defcallback set(bitmap, index)    :: bitmap
-  defcallback set_all(bitmap)       :: bitmap
-  defcallback unset?(bitmap, index) :: boolean
-  defcallback unset(bitmap, index)  :: bitmap
-  defcallback unset_all(bitmap)     :: bitmap
-  defcallback toggle(bitmap, index) :: bitmap
-  defcallback toggle_all(bitmap)    :: bitmap
-  defcallback to_string(bitmap)     :: String.t
-  defcallback inspect(bitmap)       :: String.t
+  @callback new(argt)             :: any
+  @callback at(bitmap, index)     :: bit
+  @callback set?(bitmap, index)   :: boolean
+  @callback set(bitmap, index)    :: bitmap
+  @callback set_all(bitmap)       :: bitmap
+  @callback unset?(bitmap, index) :: boolean
+  @callback unset(bitmap, index)  :: bitmap
+  @callback unset_all(bitmap)     :: bitmap
+  @callback toggle(bitmap, index) :: bitmap
+  @callback toggle_all(bitmap)    :: bitmap
+  @callback to_string(bitmap)     :: String.t
+  @callback inspect(bitmap)       :: String.t
 
-  defdelegate [new(argument), at(bitmap, index), set?(bitmap, index), 
-    set(bitmap, index), set_all(bitmap), unset?(bitmap, index), 
-    unset(bitmap, index), unset_all(bitmap), toggle(bitmap, index),
-    toggle_all(bitmap), to_string(bitmap), inspect(bitmap)], to: Bitmap.Integer
+  defdelegate new(argument), to: Bitmap.Integer
+  defdelegate at(bitmap, index), to: Bitmap.Integer
+  defdelegate set?(bitmap, index), to: Bitmap.Integer
+  defdelegate set(bitmap, index), to: Bitmap.Integer
+  defdelegate set_all(bitmap), to: Bitmap.Integer
+  defdelegate unset?(bitmap, index), to: Bitmap.Integer
+  defdelegate unset(bitmap, index), to: Bitmap.Integer
+  defdelegate unset_all(bitmap), to: Bitmap.Integer
+  defdelegate toggle(bitmap, index), to: Bitmap.Integer
+  defdelegate toggle_all(bitmap), to: Bitmap.Integer
+  defdelegate to_string(bitmap), to: Bitmap.Integer
+  defdelegate inspect(bitmap), to: Bitmap.Integer
 end
