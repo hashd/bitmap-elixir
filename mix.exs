@@ -47,7 +47,7 @@ defmodule Bitmap.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      contributors: ["Kiran Danduprolu"],
+      contributors: ["Kiran Danduprolu", "parroty", "freandre"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/hashd/bitmap-elixir"
